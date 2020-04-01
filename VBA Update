@@ -1,0 +1,67 @@
+Sub stockticker()
+'Establish stockticker name as text
+Dim stockticker As String
+
+'Establish Prices and Volume to allow decimals
+Dim openprice As Double
+Dim closeprice As Double
+Dim volume As Double
+volume = 0
+
+'Track the ticker name location in the display table
+Dim displayrow As Integer
+displayrow = 2
+
+'Prints Headers of display table
+Cells(1, 10).Value = "Ticker Name"
+Cells(1, 11).Value = "Open/Close Price Delta"
+Cells(1, 12).Value = "Price Delta %"
+Cells(1, 13).Value = "Total Stock Volume"
+
+
+'Establish for loop for ticker names
+For i = 2 To 70926
+
+    'Capture opening price for the first stocks opening price
+    If openprice = 0 Then
+        openprice = Cells(i, 3).Value
+    
+End If
+
+    'Checks to see if a change is stock ticker name and captures the closing price of a new stock
+    If Cells(i - 1, 1) = Cells(i, 1) And Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+    closeprice = Cells(i, 6).Value
+    
+        'Captures the delta between the open and close price for each stock
+        pricedelta = closeprice - openprice
+    
+        'Captures the percent change of the open and close price of each stock
+        pricedeltapercent = Round(((pricedelta / openprice) * 100), 2)
+    
+        'Sets stockticker Name
+        stockticker = Cells(i, 1).Value
+    
+        'Captures stock volume for each stock ticker name
+        volume = volume + Cells(i, 7).Value
+    
+        'Prints values for each stock ticker name in diplay table
+        Range("J" & displayrow).Value = stockticker
+        Range("K" & displayrow).Value = pricedelta
+        Range("L" & displayrow).Value = pricedeltapercent & "%"
+        Range("M" & displayrow).Value = volume
+    
+        'Moves to the next row in display table
+        displayrow = displayrow + 1
+       
+        'Resets volume to zero for next loop
+        volume = 0
+    
+    'Adds stock volume if stock ticker name is the same
+    Else
+        volume = volume + Cells(i, 7).Value
+    
+End If
+
+Next i
+
+End Sub
